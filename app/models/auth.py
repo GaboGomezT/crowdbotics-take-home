@@ -1,15 +1,15 @@
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field, constr
+from pydantic import EmailStr, constr
+from sqlmodel import SQLModel, Field
 
-
-class Login(BaseModel):
+class Login(SQLModel):
     username: Optional[str] = Field(None, title="Username")
     email: Optional[EmailStr] = Field(None, title="Email")
     password: constr(min_length=1) = Field(..., title="Password")
 
 
-class PasswordChange(BaseModel):
+class PasswordChange(SQLModel):
     new_password1: constr(min_length=1, max_length=128) = Field(
         ..., title="New password1"
     )
@@ -18,11 +18,11 @@ class PasswordChange(BaseModel):
     )
 
 
-class Password(BaseModel):
+class Password(SQLModel):
     email: EmailStr = Field(..., title="Email")
 
 
-class PasswordResetConfirm(BaseModel):
+class PasswordResetConfirm(SQLModel):
     new_password1: constr(min_length=1, max_length=128) = Field(
         ..., title="New password1"
     )
@@ -33,18 +33,18 @@ class PasswordResetConfirm(BaseModel):
     token: constr(min_length=1) = Field(..., title="Token")
 
 
-class Signup(BaseModel):
+class Signup(SQLModel):
     id: Optional[int] = Field(None, title="ID")
     name: Optional[constr(max_length=255)] = Field(None, title="Name of User")
     email: EmailStr = Field(..., title="Email address")
     password: constr(min_length=1, max_length=128) = Field(..., title="Password")
 
 
-class VerifyEmail(BaseModel):
+class VerifyEmail(SQLModel):
     key: constr(min_length=1) = Field(..., title="Key")
 
 
-class UserDetails(BaseModel):
+class UserDetails(SQLModel):
     pk: Optional[int] = Field(None, title="ID")
     username: constr(regex=r"^[\w.@+-]+$", min_length=1, max_length=150) = Field(
         ...,

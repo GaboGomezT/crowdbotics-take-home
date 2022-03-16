@@ -2,10 +2,10 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional
 
-from pydantic import BaseModel, Field, constr
+from pydantic import constr
+from sqlmodel import SQLModel, Field
 
-
-class Plan(BaseModel):
+class Plan(SQLModel):
     id: Optional[int] = Field(None, title="ID")
     name: constr(min_length=1, max_length=20) = Field(..., title="Name")
     description: constr(min_length=1) = Field(..., title="Description")

@@ -1,10 +1,9 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from sqlmodel import SQLModel, Field
 
-
-class Subscription(BaseModel):
+class Subscription(SQLModel):
     id: Optional[int] = Field(None, title="ID")
     user: Optional[int] = Field(None, title="User")
     plan: int = Field(..., title="Plan")

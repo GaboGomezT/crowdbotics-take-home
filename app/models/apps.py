@@ -2,8 +2,8 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from pydantic import AnyUrl, BaseModel, Field, constr
-
+from sqlmodel import SQLModel, Field
+from pydantic import AnyUrl, constr
 
 class Type(Enum):
     Web = "Web"
@@ -15,7 +15,7 @@ class Framework(Enum):
     React_Native = "React Native"
 
 
-class App(BaseModel):
+class App(SQLModel):
     id: Optional[int] = Field(None, title="ID")
     name: constr(min_length=1, max_length=50) = Field(..., title="Name")
     description: Optional[str] = Field(None, title="Description")
