@@ -1,0 +1,723 @@
+openapi: 3.0.0
+info:
+  title: Hiring Example API
+  description: API documentation for Hiring Example App
+  version: v1
+security:
+  - Basic: []
+paths:
+  /api/v1/apps/:
+    get:
+      operationId: api_v1_apps_list
+      description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/App"
+      tags:
+        - api
+    post:
+      operationId: api_v1_apps_create
+      description: ""
+      requestBody:
+        $ref: "#/components/requestBodies/App"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App"
+      tags:
+        - api
+    parameters: []
+  "/api/v1/apps/{id}/":
+    get:
+      operationId: api_v1_apps_read
+      description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App"
+      tags:
+        - api
+    put:
+      operationId: api_v1_apps_update
+      description: ""
+      requestBody:
+        $ref: "#/components/requestBodies/App"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App"
+      tags:
+        - api
+    patch:
+      operationId: api_v1_apps_partial_update
+      description: ""
+      requestBody:
+        $ref: "#/components/requestBodies/App"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App"
+      tags:
+        - api
+    delete:
+      operationId: api_v1_apps_delete
+      description: ""
+      responses:
+        "204":
+          description: ""
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this app.
+        required: true
+        schema:
+          type: integer
+  /api/v1/plans/:
+    get:
+      operationId: api_v1_plans_list
+      description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Plan"
+      tags:
+        - api
+    parameters: []
+  "/api/v1/plans/{id}/":
+    get:
+      operationId: api_v1_plans_read
+      description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Plan"
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this plan.
+        required: true
+        schema:
+          type: integer
+  /api/v1/subscriptions/:
+    get:
+      operationId: api_v1_subscriptions_list
+      description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Subscription"
+      tags:
+        - api
+    post:
+      operationId: api_v1_subscriptions_create
+      description: ""
+      requestBody:
+        $ref: "#/components/requestBodies/Subscription"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+      tags:
+        - api
+    parameters: []
+  "/api/v1/subscriptions/{id}/":
+    get:
+      operationId: api_v1_subscriptions_read
+      description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+      tags:
+        - api
+    put:
+      operationId: api_v1_subscriptions_update
+      description: ""
+      requestBody:
+        $ref: "#/components/requestBodies/Subscription"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+      tags:
+        - api
+    patch:
+      operationId: api_v1_subscriptions_partial_update
+      description: ""
+      requestBody:
+        $ref: "#/components/requestBodies/Subscription"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this subscription.
+        required: true
+        schema:
+          type: integer
+  /rest-auth/login/:
+    post:
+      operationId: rest-auth_login_create
+      description: |-
+        Check the credentials and return the REST Token
+        if the credentials are valid and authenticated.
+        Calls Django Auth login method to register User ID
+        in Django session framework
+
+        Accept the following POST parameters: username, password
+        Return the REST Framework Token Object's key.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Login"
+      tags:
+        - rest-auth
+    parameters: []
+  /rest-auth/logout/:
+    get:
+      operationId: rest-auth_logout_list
+      summary: |-
+        Calls Django logout method and delete the Token object
+        assigned to the current User object.
+      description: Accepts/Returns nothing.
+      responses:
+        "200":
+          description: ""
+      tags:
+        - rest-auth
+    post:
+      operationId: rest-auth_logout_create
+      summary: |-
+        Calls Django logout method and delete the Token object
+        assigned to the current User object.
+      description: Accepts/Returns nothing.
+      responses:
+        "201":
+          description: ""
+      tags:
+        - rest-auth
+    parameters: []
+  /rest-auth/password/change/:
+    post:
+      operationId: rest-auth_password_change_create
+      summary: Calls Django Auth SetPasswordForm save method.
+      description: |-
+        Accepts the following POST parameters: new_password1, new_password2
+        Returns the success/fail message.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordChange"
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordChange"
+      tags:
+        - rest-auth
+    parameters: []
+  /rest-auth/password/reset/:
+    post:
+      operationId: rest-auth_password_reset_create
+      summary: Calls Django Auth PasswordResetForm save method.
+      description: |-
+        Accepts the following POST parameters: email
+        Returns the success/fail message.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Password"
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Password"
+      tags:
+        - rest-auth
+    parameters: []
+  /rest-auth/password/reset/confirm/:
+    post:
+      operationId: rest-auth_password_reset_confirm_create
+      summary: |-
+        Password reset e-mail link is confirmed, therefore
+        this resets the user's password.
+      description: |-
+        Accepts the following POST parameters: token, uid,
+            new_password1, new_password2
+        Returns the success/fail message.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordResetConfirm"
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetConfirm"
+      tags:
+        - rest-auth
+    parameters: []
+  /rest-auth/registration/:
+    post:
+      operationId: rest-auth_registration_create
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Signup"
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Signup"
+      tags:
+        - rest-auth
+    parameters: []
+  /rest-auth/registration/verify-email/:
+    post:
+      operationId: rest-auth_registration_verify-email_create
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyEmail"
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyEmail"
+      tags:
+        - rest-auth
+    parameters: []
+  /rest-auth/user/:
+    get:
+      operationId: rest-auth_user_read
+      summary: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+      description: |-
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
+      tags:
+        - rest-auth
+    put:
+      operationId: rest-auth_user_update
+      summary: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+      description: |-
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      requestBody:
+        $ref: "#/components/requestBodies/UserDetails"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
+      tags:
+        - rest-auth
+    patch:
+      operationId: rest-auth_user_partial_update
+      summary: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+      description: |-
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      requestBody:
+        $ref: "#/components/requestBodies/UserDetails"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
+      tags:
+        - rest-auth
+    parameters: []
+servers:
+  - url: https://hiring-example-25770.botics.co/
+components:
+  requestBodies:
+    App:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/App"
+      required: true
+    Subscription:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Subscription"
+      required: true
+    UserDetails:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserDetails"
+      required: true
+  securitySchemes:
+    Basic:
+      type: http
+      scheme: basic
+  schemas:
+    App:
+      required:
+        - name
+        - type
+        - framework
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        name:
+          title: Name
+          type: string
+          maxLength: 50
+          minLength: 1
+        description:
+          title: Description
+          type: string
+        type:
+          title: Type
+          type: string
+          enum:
+            - Web
+            - Mobile
+        framework:
+          title: Framework
+          type: string
+          enum:
+            - Django
+            - React Native
+        domain_name:
+          title: Domain name
+          type: string
+          maxLength: 50
+        screenshot:
+          title: Screenshot
+          type: string
+          readOnly: true
+          format: uri
+        subscription:
+          title: Subscription
+          type: integer
+          readOnly: true
+        user:
+          title: User
+          type: integer
+          readOnly: true
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+    Plan:
+      required:
+        - name
+        - description
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        name:
+          title: Name
+          type: string
+          maxLength: 20
+          minLength: 1
+        description:
+          title: Description
+          type: string
+          minLength: 1
+        price:
+          title: Price
+          type: string
+          format: decimal
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+    Subscription:
+      required:
+        - plan
+        - app
+        - active
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        user:
+          title: User
+          type: integer
+          readOnly: true
+        plan:
+          title: Plan
+          type: integer
+        app:
+          title: App
+          type: integer
+        active:
+          title: Active
+          type: boolean
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+    Login:
+      required:
+        - password
+      type: object
+      properties:
+        username:
+          title: Username
+          type: string
+        email:
+          title: Email
+          type: string
+          format: email
+        password:
+          title: Password
+          type: string
+          minLength: 1
+    PasswordChange:
+      required:
+        - new_password1
+        - new_password2
+      type: object
+      properties:
+        new_password1:
+          title: New password1
+          type: string
+          maxLength: 128
+          minLength: 1
+        new_password2:
+          title: New password2
+          type: string
+          maxLength: 128
+          minLength: 1
+    Password:
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          title: Email
+          type: string
+          format: email
+          minLength: 1
+    PasswordResetConfirm:
+      required:
+        - new_password1
+        - new_password2
+        - uid
+        - token
+      type: object
+      properties:
+        new_password1:
+          title: New password1
+          type: string
+          maxLength: 128
+          minLength: 1
+        new_password2:
+          title: New password2
+          type: string
+          maxLength: 128
+          minLength: 1
+        uid:
+          title: Uid
+          type: string
+          minLength: 1
+        token:
+          title: Token
+          type: string
+          minLength: 1
+    Signup:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        name:
+          title: Name of User
+          type: string
+          maxLength: 255
+          nullable: true
+        email:
+          title: Email address
+          type: string
+          format: email
+          maxLength: 254
+          minLength: 1
+        password:
+          title: Password
+          type: string
+          maxLength: 128
+          minLength: 1
+    VerifyEmail:
+      required:
+        - key
+      type: object
+      properties:
+        key:
+          title: Key
+          type: string
+          minLength: 1
+    UserDetails:
+      required:
+        - username
+      type: object
+      properties:
+        pk:
+          title: ID
+          type: integer
+          readOnly: true
+        username:
+          title: Username
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          type: string
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+          minLength: 1
+        email:
+          title: Email address
+          type: string
+          format: email
+          readOnly: true
+          minLength: 1
+        first_name:
+          title: First name
+          type: string
+          maxLength: 30
+        last_name:
+          title: Last name
+          type: string
+          maxLength: 150
