@@ -3,7 +3,7 @@ from typing import List, Union
 from fastapi import APIRouter
 
 router = APIRouter()
-from app.models.db import Subscription
+from app.models.subscriptions import Subscription
 
 
 @router.get("/api/v1/subscriptions/", response_model=List[Subscription])

@@ -2,7 +2,7 @@ from typing import List, Union
 
 from fastapi import APIRouter
 
-from app.models.db import App
+from app.models.apps import App
 
 router = APIRouter()
 

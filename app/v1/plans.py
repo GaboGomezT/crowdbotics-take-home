@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
-from app.models.db import Plan
+from app.models.plans import Plan
 
 
 @router.get("/api/v1/plans/", response_model=List[Plan])

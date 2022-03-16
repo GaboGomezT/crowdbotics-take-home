@@ -2,7 +2,7 @@ from typing import Union
 
 from fastapi import APIRouter
 
-from app.models.db import (
+from app.models.auth import (
     Login,
     Password,
     PasswordChange,
