@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from sqlmodel import SQLModel
 
-from app.models.db import engine
+from app.config import engine
 from app.v1 import apps, auth, plans, subscriptions
 
 

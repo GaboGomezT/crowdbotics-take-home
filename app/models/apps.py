@@ -2,7 +2,9 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Session
+from app.config import engine
+
 from pydantic import AnyUrl, constr
 
 class Type(Enum):
@@ -27,3 +29,10 @@ class App(SQLModel, table=True):
     user: Optional[int] = Field(None, title="User")
     created_at: Optional[datetime] = Field(None, title="Created at")
     updated_at: Optional[datetime] = Field(None, title="Updated at")
+
+    def save(self):
+        with Session(engine) as session:
+            session.add(self)
+            session.commit()
+            session.refresh(self)
+            return self

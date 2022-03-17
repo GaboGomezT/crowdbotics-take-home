@@ -1,7 +1,8 @@
 from typing import List, Union
 
 from fastapi import APIRouter
-
+from sqlmodel import Session, select
+from app.config import engine
 from app.models.apps import App
 
 router = APIRouter()
@@ -9,12 +10,14 @@ router = APIRouter()
 
 @router.get("/api/v1/apps/", response_model=List[App])
 def api_v1_apps_list() -> List[App]:
-    pass
+    with Session(engine) as session:
+        apps = session.exec(select(App)).all()
+        return apps
 
 
 @router.post("/api/v1/apps/", response_model=None, responses={"201": {"model": App}})
-def api_v1_apps_create(body: App) -> Union[None, App]:
-    pass
+def api_v1_apps_create(app: App) -> Union[None, App]:
+    return app.save()
 
 
 @router.get("/api/v1/apps/{id}/", response_model=App)
