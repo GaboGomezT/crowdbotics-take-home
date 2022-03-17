@@ -4,6 +4,9 @@
 
 * Logging
 * Better Testing
+    - Fuzzy Testing
+    - Unit Testing
+    - Sad Path Testing
 * Better auth (salt)
 * Docker image
 * Find workaround for enum validation [w/sqlmodel](https://github.com/tiangolo/sqlmodel/pull/24)
