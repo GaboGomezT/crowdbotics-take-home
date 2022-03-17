@@ -34,6 +34,7 @@ def api_v1_apps_partial_update(*, session: Session = Depends(get_session), id: i
     return App.update_patch(id, app_patch, session)
 
 
-@router.delete("/api/v1/apps/{id}/", response_model=None)
+@router.delete("/api/v1/apps/{id}/", response_model=None, status_code=204)
 def api_v1_apps_delete(*, session: Session = Depends(get_session), id: int) -> None:
-    pass
+    app = App.find(id, session)
+    app.delete(session)

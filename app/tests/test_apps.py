@@ -105,3 +105,19 @@ def test_api_v1_apps_update(session: Session, client: TestClient):
 
     for key, value in new_data.items():
         assert data[key] == value
+
+def test_api_v1_apps_delete(session: Session, client: TestClient):
+    app = App(
+        name="Crowdbotics",
+        description="No-code app builder",
+        type="Web",
+        framework="Django",
+    )
+    app.save(session)
+   
+    response = client.delete(f"/api/v1/apps/{app.id}/")
+
+    assert response.status_code == 204
+
+    all_apps = App.get_all(session)
+    assert len(all_apps) == 0

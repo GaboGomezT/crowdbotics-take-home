@@ -45,6 +45,10 @@ class App(AppBase, table=True):
         session.refresh(self)
         return self
 
+    def delete(self, session: Session):
+        session.delete(self)
+        session.commit()
+
     @staticmethod
     def get_all(session: Session):
         return session.exec(select(App)).all()
