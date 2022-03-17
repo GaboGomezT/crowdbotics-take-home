@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from sqlmodel import SQLModel, Field, Session
+from sqlmodel import SQLModel, Field, Session, select
 from app.config import engine
 
 from pydantic import AnyUrl, constr
@@ -36,3 +36,15 @@ class App(SQLModel, table=True):
             session.commit()
             session.refresh(self)
             return self
+
+    @staticmethod
+    def get_all():
+        with Session(engine) as session:
+            apps = session.exec(select(App)).all()
+            return apps
+    
+    @staticmethod
+    def find(id: int):
+        with Session(engine) as session:
+            apps = session.exec(select(App)).all()
+            return apps

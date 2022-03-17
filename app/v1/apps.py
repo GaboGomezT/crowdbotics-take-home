@@ -10,9 +10,7 @@ router = APIRouter()
 
 @router.get("/api/v1/apps/", response_model=List[App])
 def api_v1_apps_list() -> List[App]:
-    with Session(engine) as session:
-        apps = session.exec(select(App)).all()
-        return apps
+    return App.get_all()
 
 
 @router.post("/api/v1/apps/", response_model=None, responses={"201": {"model": App}})
