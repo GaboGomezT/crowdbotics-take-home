@@ -1,6 +1,8 @@
+from ctypes import Union
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+from fastapi import HTTPException
 
 from sqlmodel import SQLModel, Field, Session, select
 from app.config import engine
@@ -21,6 +23,13 @@ class AppBase(SQLModel):
     description: Optional[str] = Field(None, title="Description")
     type: str = Field(..., title="Type")
     framework: str = Field(..., title="Framework")
+    domain_name: Optional[constr(max_length=50)] = Field(None, title="Domain name")
+
+class AppPatch(SQLModel):
+    name: Optional[constr(min_length=1, max_length=50)] = Field(None, title="Name")
+    description: Optional[str] = Field(None, title="Description")
+    type: Optional[str] = Field(None, title="Type")
+    framework: Optional[str] = Field(None, title="Framework")
     domain_name: Optional[constr(max_length=50)] = Field(None, title="Domain name")
 
 class App(AppBase, table=True):
@@ -47,5 +56,15 @@ class App(AppBase, table=True):
     @staticmethod
     def find(id: int):
         with Session(engine) as session:
-            apps = session.exec(select(App)).all()
-            return apps
+            app = session.get(App, id)
+            if not app:
+                raise HTTPException(status_code=404, detail="App not found")
+            return app
+
+    @staticmethod
+    def update_patch(id: int, app: AppBase):
+        db_app = App.find(id)
+        app_data = app.dict(exclude_unset=True)
+        for key, value in app_data.items():
+            setattr(db_app, key, value)
+        return db_app.save()

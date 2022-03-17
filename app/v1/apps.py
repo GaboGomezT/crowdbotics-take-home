@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from fastapi import APIRouter
-from app.models.apps import App, AppBase
+from app.models.apps import App, AppBase, AppPatch
 
 router = APIRouter()
 
@@ -19,17 +19,17 @@ def api_v1_apps_create(app: AppBase) -> Union[None, App]:
 
 @router.get("/api/v1/apps/{id}/", response_model=App)
 def api_v1_apps_read(id: int) -> App:
-    pass
+    return App.find(id)
 
 
 @router.put("/api/v1/apps/{id}/", response_model=App)
-def api_v1_apps_update(id: int, body: App = ...) -> App:
-    pass
+def api_v1_apps_update(id: int, app_update: AppBase = ...) -> App:
+    return App.update_patch(id, app_update)
 
 
 @router.patch("/api/v1/apps/{id}/", response_model=App)
-def api_v1_apps_partial_update(id: int, body: App = ...) -> App:
-    pass
+def api_v1_apps_partial_update(id: int, app_patch: AppPatch = ...) -> App:
+    return App.update_patch(id, app_patch)
 
 
 @router.delete("/api/v1/apps/{id}/", response_model=None)
