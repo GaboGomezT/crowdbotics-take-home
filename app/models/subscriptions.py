@@ -3,8 +3,8 @@ from typing import Optional
 
 from sqlmodel import SQLModel, Field
 
-class Subscription(SQLModel):
-    id: Optional[int] = Field(None, title="ID")
+class Subscription(SQLModel, table=True):
+    id: Optional[int] = Field(None, title="ID", primary_key=True)
     user: Optional[int] = Field(None, title="User")
     plan: int = Field(..., title="Plan")
     app: int = Field(..., title="App")

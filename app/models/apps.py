@@ -15,12 +15,12 @@ class Framework(Enum):
     React_Native = "React Native"
 
 
-class App(SQLModel):
-    id: Optional[int] = Field(None, title="ID")
+class App(SQLModel, table=True):
+    id: Optional[int] = Field(None, title="ID", primary_key=True)
     name: constr(min_length=1, max_length=50) = Field(..., title="Name")
     description: Optional[str] = Field(None, title="Description")
-    type: Type = Field(..., title="Type")
-    framework: Framework = Field(..., title="Framework")
+    type: str = Field(..., title="Type")
+    framework: str = Field(..., title="Framework")
     domain_name: Optional[constr(max_length=50)] = Field(None, title="Domain name")
     screenshot: Optional[AnyUrl] = Field(None, title="Screenshot")
     subscription: Optional[int] = Field(None, title="Subscription")
