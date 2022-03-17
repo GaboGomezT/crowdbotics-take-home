@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlmodel import SQLModel, Field
+from sqlmodel import Field, SQLModel
+
 
 class Subscription(SQLModel, table=True):
     id: Optional[int] = Field(None, title="ID", primary_key=True)

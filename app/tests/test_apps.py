@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from app.main import app as fastapi_app
 from app.models.apps import App
-from app.tests.fixtures import session_fixture, client_fixture
+from app.tests.fixtures import client_fixture, session_fixture
 
 
 def test_api_v1_apps_create(client: TestClient):
@@ -87,7 +87,7 @@ def test_api_v1_apps_update(session: Session, client: TestClient):
         framework="Django",
     )
     app.save(session)
-   
+
     new_data = {
         "name": "Crowdbotics 2.0",
         "description": "No-code app builder",
@@ -106,6 +106,7 @@ def test_api_v1_apps_update(session: Session, client: TestClient):
     for key, value in new_data.items():
         assert data[key] == value
 
+
 def test_api_v1_apps_delete(session: Session, client: TestClient):
     app = App(
         name="Crowdbotics",
@@ -114,7 +115,7 @@ def test_api_v1_apps_delete(session: Session, client: TestClient):
         framework="Django",
     )
     app.save(session)
-   
+
     response = client.delete(f"/api/v1/apps/{app.id}/")
 
     assert response.status_code == 204

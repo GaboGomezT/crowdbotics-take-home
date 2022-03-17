@@ -2,7 +2,8 @@ from typing import Optional
 
 from pydantic import EmailStr, constr
 from sqlalchemy import table
-from sqlmodel import SQLModel, Field
+from sqlmodel import Field, SQLModel
+
 
 class Login(SQLModel):
     username: Optional[str] = Field(None, title="Username")

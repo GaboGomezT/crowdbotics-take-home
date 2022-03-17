@@ -1,12 +1,11 @@
 from datetime import datetime
 from enum import Enum
 from typing import Optional
-from fastapi import HTTPException, Depends
 
-from sqlmodel import SQLModel, Field, Session, select
-from app.config import engine
-from app.config import get_session
+from fastapi import HTTPException
 from pydantic import AnyUrl, constr
+from sqlmodel import Field, Session, SQLModel, select
+
 
 class Type(Enum):
     Web = "Web"
@@ -17,6 +16,7 @@ class Framework(Enum):
     Django = "Django"
     React_Native = "React Native"
 
+
 class AppBase(SQLModel):
     name: constr(min_length=1, max_length=50) = Field(..., title="Name")
     description: Optional[str] = Field(None, title="Description")
@@ -24,12 +24,14 @@ class AppBase(SQLModel):
     framework: str = Field(..., title="Framework")
     domain_name: Optional[constr(max_length=50)] = Field(None, title="Domain name")
 
+
 class AppPatch(SQLModel):
     name: Optional[constr(min_length=1, max_length=50)] = Field(None, title="Name")
     description: Optional[str] = Field(None, title="Description")
     type: Optional[str] = Field(None, title="Type")
     framework: Optional[str] = Field(None, title="Framework")
     domain_name: Optional[constr(max_length=50)] = Field(None, title="Domain name")
+
 
 class App(AppBase, table=True):
     id: Optional[int] = Field(None, title="ID", primary_key=True)
@@ -52,7 +54,7 @@ class App(AppBase, table=True):
     @staticmethod
     def get_all(session: Session):
         return session.exec(select(App)).all()
-    
+
     @staticmethod
     def find(id: int, session: Session):
         app = session.get(App, id)

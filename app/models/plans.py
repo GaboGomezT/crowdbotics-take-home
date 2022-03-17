@@ -3,7 +3,8 @@ from decimal import Decimal
 from typing import Optional
 
 from pydantic import constr
-from sqlmodel import SQLModel, Field
+from sqlmodel import Field, SQLModel
+
 
 class Plan(SQLModel, table=True):
     id: Optional[int] = Field(None, title="ID", primary_key=True)
