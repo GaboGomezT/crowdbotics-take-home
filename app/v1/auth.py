@@ -5,12 +5,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session
 
 from app.config import get_session
-from app.models.auth import Token, User
+from app.models.auth import PasswordChange, Token, User
 from app.v1.auth_utils import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
-    authenticate_user,
     create_access_token,
-    get_password_hash,
+    get_token,
 )
 
 router = APIRouter()
@@ -21,7 +20,7 @@ def login_for_access_token(
     session: Session = Depends(get_session),
     form_data: OAuth2PasswordRequestForm = Depends(),
 ):
-    user = authenticate_user(form_data.username, form_data.password, session)
+    user = User.authenticate_user(form_data.username, form_data.password, session)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -40,13 +39,30 @@ def register(
     session: Session = Depends(get_session),
     form_data: OAuth2PasswordRequestForm = Depends(),
 ):
-    hashed_password = get_password_hash(form_data.password)
     user = User()
     user.username = form_data.username
-    user.hashed_password = hashed_password
-    user.save(session)
+    user.set_hashed_password(form_data.password)
+    user.save_new(session)
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return Token(access_token=access_token, token_type="bearer")
+
+
+@router.post("/change-password", response_model=None, status_code=200)
+def change_password(
+    body: PasswordChange,
+    session: Session = Depends(get_session),
+    token: User = Depends(get_token),
+):
+    try:
+        user = User.find_username(token.username, session)
+    except:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    user.update_password(body.old_password, body.new_password)
+    user.save(session)
