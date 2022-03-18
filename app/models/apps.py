@@ -2,9 +2,10 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from fastapi import HTTPException
 from pydantic import AnyUrl, constr
 from sqlmodel import Field, Session, SQLModel, select
+
+from app.models.base import CRUD
 
 
 class Type(Enum):
@@ -33,34 +34,13 @@ class AppPatch(SQLModel):
     domain_name: Optional[constr(max_length=50)] = Field(None, title="Domain name")
 
 
-class App(AppBase, table=True):
+class App(AppBase, CRUD, table=True):
     id: Optional[int] = Field(None, title="ID", primary_key=True)
     screenshot: Optional[AnyUrl] = Field(None, title="Screenshot")
     subscription: Optional[int] = Field(None, title="Subscription")
     user: Optional[int] = Field(None, title="User")
     created_at: Optional[datetime] = Field(datetime.now(), title="Created at")
     updated_at: Optional[datetime] = Field(datetime.now(), title="Updated at")
-
-    def save(self, session: Session):
-        session.add(self)
-        session.commit()
-        session.refresh(self)
-        return self
-
-    def delete(self, session: Session):
-        session.delete(self)
-        session.commit()
-
-    @staticmethod
-    def get_all(session: Session):
-        return session.exec(select(App)).all()
-
-    @staticmethod
-    def find(id: int, session: Session):
-        app = session.get(App, id)
-        if not app:
-            raise HTTPException(status_code=404, detail="App not found")
-        return app
 
     @staticmethod
     def update_patch(id: int, app: AppBase, session: Session):
