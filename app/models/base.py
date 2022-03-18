@@ -1,3 +1,4 @@
+from attr import attr, attrib
 from fastapi import HTTPException
 from sqlalchemy import table
 from sqlmodel import Session, SQLModel, select

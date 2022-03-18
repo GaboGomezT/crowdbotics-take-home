@@ -1,58 +1,42 @@
 from typing import Optional
 
-from pydantic import EmailStr, constr
-from sqlalchemy import table
-from sqlmodel import Field, SQLModel
+from fastapi import HTTPException
+from sqlmodel import Field, Session, SQLModel, select
+
+from app.models.base import CRUD
 
 
-class Login(SQLModel):
-    username: Optional[str] = Field(None, title="Username")
-    email: Optional[EmailStr] = Field(None, title="Email")
-    password: constr(min_length=1) = Field(..., title="Password")
-
-
-class PasswordChange(SQLModel):
-    new_password1: constr(min_length=1, max_length=128) = Field(
-        ..., title="New password1"
-    )
-    new_password2: constr(min_length=1, max_length=128) = Field(
-        ..., title="New password2"
-    )
-
-
-class Password(SQLModel):
-    email: EmailStr = Field(..., title="Email")
-
-
-class PasswordResetConfirm(SQLModel):
-    new_password1: constr(min_length=1, max_length=128) = Field(
-        ..., title="New password1"
-    )
-    new_password2: constr(min_length=1, max_length=128) = Field(
-        ..., title="New password2"
-    )
-    uid: constr(min_length=1) = Field(..., title="Uid")
-    token: constr(min_length=1) = Field(..., title="Token")
-
-
-class Signup(SQLModel, table=True):
+class User(CRUD, table=True):
     id: Optional[int] = Field(None, title="ID", primary_key=True)
-    name: Optional[constr(max_length=255)] = Field(None, title="Name of User")
-    email: EmailStr = Field(..., title="Email address")
-    password: constr(min_length=1, max_length=128) = Field(..., title="Password")
+    username: str = Field(..., title="Username")
+    hashed_password: str = Field(..., title="Hashed password")
+
+    def save(self, session: Session):
+        db_user = None
+        try:
+            db_user = User.find_username(self.username, session)
+        except:
+            super(User, self).save(session)
+        if db_user:
+            raise HTTPException(
+                status_code=400,
+                detail=f"User with username {self.username} already exists.",
+            )
+
+    @staticmethod
+    def find_username(username: str, session: Session):
+        statement = select(User).where(User.username == username)
+        results = session.exec(statement)
+        user = results.first()
+        if not user:
+            raise HTTPException(status_code=404, detail=f"User not found")
+        return user
 
 
-class VerifyEmail(SQLModel):
-    key: constr(min_length=1) = Field(..., title="Key")
+class Token(SQLModel):
+    access_token: str
+    token_type: str
 
 
-class UserDetails(SQLModel, table=True):
-    pk: Optional[int] = Field(None, title="ID", primary_key=True)
-    username: constr(regex=r"^[\w.@+-]+$", min_length=1, max_length=150) = Field(
-        ...,
-        description="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
-        title="Username",
-    )
-    email: Optional[EmailStr] = Field(None, title="Email address")
-    first_name: Optional[constr(max_length=30)] = Field(None, title="First name")
-    last_name: Optional[constr(max_length=150)] = Field(None, title="Last name")
+class TokenData(SQLModel):
+    username: Optional[str] = None
