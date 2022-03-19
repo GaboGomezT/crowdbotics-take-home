@@ -60,6 +60,19 @@ class User(CRUD, table=True):
         return user
 
     @staticmethod
+    def validate(username: str, session: Session):
+        statement = select(User).where(User.username == username)
+        results = session.exec(statement)
+        user = results.first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        return user
+
+    @staticmethod
     def authenticate_user(username: str, password: str, session: Session):
         try:
             user = User.find_username(username, session)

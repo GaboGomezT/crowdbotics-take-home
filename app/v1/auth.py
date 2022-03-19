@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session
 
 from app.config import get_session
-from app.models.auth import PasswordChange, Token, User
+from app.models.auth import PasswordChange, Token, TokenData, User
 from app.v1.auth_utils import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
@@ -54,15 +54,8 @@ def register(
 def change_password(
     body: PasswordChange,
     session: Session = Depends(get_session),
-    token: User = Depends(get_token),
+    token: TokenData = Depends(get_token),
 ):
-    try:
-        user = User.find_username(token.username, session)
-    except:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    user = User.validate(token.username, session)
     user.update_password(body.old_password, body.new_password)
     user.save(session)
