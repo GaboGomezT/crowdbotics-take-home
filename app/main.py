@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
+from sqlmodel import Session
 from sqlmodel import SQLModel
 
-from app.config import engine
+from app.config import engine, get_session
+from app.models.plans import Plan
 from app.v1 import apps, auth, plans, subscriptions
 
 
@@ -20,6 +22,9 @@ app = FastAPI(
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+    session = Session(engine)
+    Plan.setup(session=session)
+    session.close()
 
 
 app.include_router(apps.router)

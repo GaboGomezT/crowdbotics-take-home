@@ -140,8 +140,8 @@ class App(AppBase, CRUD, table=True):
     screenshot: Optional[AnyUrl] = Field(None, title="Screenshot")
     subscription: Optional[int] = Field(None, title="Subscription")
     user_id: Optional[int] = Field(None, title="User", foreign_key="user.id")
-    created_at: Optional[datetime] = Field(datetime.now(), title="Created at")
-    updated_at: Optional[datetime] = Field(datetime.now(), title="Updated at")
+    created_at: Optional[datetime] = Field(datetime.utcnow(), title="Created at")
+    updated_at: Optional[datetime] = Field(datetime.utcnow(), title="Updated at")
 
     user: Optional[User] = Relationship(back_populates="apps")
 
