@@ -92,6 +92,7 @@ def test_api_v1_apps_update(session: Session, client: TestClient):
         description="No-code app builder",
         type="Web",
         framework="Django",
+        user=User(username="test_name", hashed_password="pass"),
     )
     app.save(session)
 
@@ -114,12 +115,36 @@ def test_api_v1_apps_update(session: Session, client: TestClient):
         assert data[key] == value
 
 
+def test_api_v1_apps_partial_update(session: Session, client: TestClient):
+    app = App(
+        name="Crowdbotics",
+        description="No-code app builder",
+        type="Web",
+        framework="Django",
+        user=User(username="test_name", hashed_password="pass"),
+    )
+    app.save(session)
+
+    new_data = {"name": "Crowdbotics 2.0"}
+    response = client.patch(
+        f"/api/v1/apps/{app.id}/",
+        json=new_data,
+    )
+    data = response.json()
+    print(data)
+    assert response.status_code == 200
+
+    for key, value in new_data.items():
+        assert data[key] == value
+
+
 def test_api_v1_apps_delete(session: Session, client: TestClient):
     app = App(
         name="Crowdbotics",
         description="No-code app builder",
         type="Web",
         framework="Django",
+        user=User(username="test_name", hashed_password="pass"),
     )
     app.save(session)
 

@@ -145,11 +145,9 @@ class App(AppBase, CRUD, table=True):
 
     user: Optional[User] = Relationship(back_populates="apps")
 
-    @staticmethod
-    def update_patch(id: int, app: AppBase, session: Session):
-        db_app = App.find(id, session)
+    def update_patch(self, app: AppBase, session: Session):
         app_data = app.dict(exclude_unset=True)
         for key, value in app_data.items():
-            setattr(db_app, key, value)
-        db_app.updated_at = datetime.now()
-        return db_app.save(session)
+            setattr(self, key, value)
+        self.updated_at = datetime.now()
+        return self.save(session)

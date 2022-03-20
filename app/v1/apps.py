@@ -50,17 +50,31 @@ def api_v1_apps_update(
     id: int,
     app_update: AppBase = ...
 ) -> App:
-    return App.update_patch(id, app_update, session)
+    user = User.validate_token(token.username, session)
+    app: App = user.find_app(id)
+    return app.update_patch(app_update, session)
 
 
 @router.patch("/api/v1/apps/{id}/", response_model=App)
 def api_v1_apps_partial_update(
-    *, session: Session = Depends(get_session), id: int, app_patch: AppPatch = ...
+    *,
+    session: Session = Depends(get_session),
+    token: TokenData = Depends(get_token),
+    id: int,
+    app_patch: AppPatch = ...
 ) -> App:
-    return App.update_patch(id, app_patch, session)
+    user = User.validate_token(token.username, session)
+    app: App = user.find_app(id)
+    return app.update_patch(app_patch, session)
 
 
 @router.delete("/api/v1/apps/{id}/", response_model=None, status_code=204)
-def api_v1_apps_delete(*, session: Session = Depends(get_session), id: int) -> None:
-    app = App.find(id, session)
+def api_v1_apps_delete(
+    *,
+    session: Session = Depends(get_session),
+    token: TokenData = Depends(get_token),
+    id: int
+) -> None:
+    user = User.validate_token(token.username, session)
+    app: App = user.find_app(id)
     app.delete(session)
