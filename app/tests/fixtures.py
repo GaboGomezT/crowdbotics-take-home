@@ -5,6 +5,8 @@ from sqlmodel.pool import StaticPool
 
 from app.config import get_session
 from app.main import app as fastapi_app
+from app.models.db import TokenData
+from app.v1.auth_utils import get_token
 
 
 @pytest.fixture(name="session")
@@ -17,12 +19,22 @@ def session_fixture():
         yield session
 
 
+@pytest.fixture(name="token")
+def token_fixture():
+    token = TokenData(username="test_name")
+    yield token
+
+
 @pytest.fixture(name="client")
-def client_fixture(session: Session):
+def client_fixture(session: Session, token: TokenData):
     def get_session_override():
         return session
 
+    def get_token_override():
+        return token
+
     fastapi_app.dependency_overrides[get_session] = get_session_override
+    fastapi_app.dependency_overrides[get_token] = get_token_override
 
     client = TestClient(fastapi_app)
     yield client

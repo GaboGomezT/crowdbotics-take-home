@@ -2,11 +2,14 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session
 
 from app.main import app as fastapi_app
-from app.models.apps import App
-from app.tests.fixtures import client_fixture, session_fixture
+from app.models.db import App, User
+from app.tests.fixtures import client_fixture, session_fixture, token_fixture
 
 
-def test_api_v1_apps_create(client: TestClient):
+def test_api_v1_apps_create(session: Session, client: TestClient):
+    user = User(username="test_name", hashed_password="pass")
+    user.save(session)
+
     response = client.post(
         "/api/v1/apps/",
         json={
@@ -34,6 +37,7 @@ def test_api_v1_apps_read(session: Session, client: TestClient):
         description="No-code app builder",
         type="Web",
         framework="Django",
+        user=User(username="test_name", hashed_password="pass"),
     )
     app.save(session)
 
@@ -49,11 +53,13 @@ def test_api_v1_apps_read(session: Session, client: TestClient):
 
 
 def test_api_v1_apps_list(session: Session, client: TestClient):
+    user = User(username="test_name", hashed_password="pass")
     first_app = App(
         name="Crowdbotics",
         description="No-code app builder",
         type="Web",
         framework="Django",
+        user=user,
     )
     first_app.save(session)
     second_app = App(
@@ -61,6 +67,7 @@ def test_api_v1_apps_list(session: Session, client: TestClient):
         description="No-code app builder",
         type="Web",
         framework="FastAPI",
+        user=user,
     )
     second_app.save(session)
     apps = [first_app, second_app]

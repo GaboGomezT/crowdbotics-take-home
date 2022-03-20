@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session
 
 from app.config import get_session
-from app.models.auth import PasswordChange, Token, TokenData, User
+from app.models.db import PasswordChange, Token, TokenData, User
 from app.v1.auth_utils import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
@@ -56,6 +56,6 @@ def change_password(
     session: Session = Depends(get_session),
     token: TokenData = Depends(get_token),
 ):
-    user = User.validate(token.username, session)
+    user = User.validate_token(token.username, session)
     user.update_password(body.old_password, body.new_password)
     user.save(session)
