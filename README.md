@@ -7,6 +7,7 @@
     - Fuzzy Testing
     - Unit Testing
     - Sad Path Testing
+    - Use a DB engine instead of sqlite 
 * Better auth
     - Logout, Recover Password
 * Docker image
