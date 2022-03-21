@@ -6,9 +6,9 @@ from os import getenv
 load_dotenv(override=True)
 
 SECRET_KEY = getenv("SECRET_KEY")
-DB_URL = getenv("DB_URL")
+DATABASE_URL = getenv("DATABASE_URL")
 DEV = getenv("DEV", default=False)
-engine = create_engine(DB_URL, echo=DEV)
+engine = create_engine(DATABASE_URL, echo=DEV)
 
 
 def get_session():
