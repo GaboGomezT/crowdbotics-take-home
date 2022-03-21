@@ -9,7 +9,13 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session
 
 from app.config import get_session
-from app.models.db import Subscription, SubscriptionBase, TokenData, User
+from app.models.db import (
+    Subscription,
+    SubscriptionBase,
+    SubscriptionPatch,
+    TokenData,
+    User,
+)
 from app.v1.auth_utils import get_token
 
 
@@ -64,6 +70,12 @@ def api_v1_subscriptions_update(
 
 @router.patch("/api/v1/subscriptions/{id}/", response_model=Subscription)
 def api_v1_subscriptions_partial_update(
-    id: int, body: Subscription = ...
+    *,
+    session: Session = Depends(get_session),
+    token: TokenData = Depends(get_token),
+    id: int,
+    subscription_update: SubscriptionPatch = ...
 ) -> Subscription:
-    pass
+    user = User.validate_token(token.username, session)
+    subscription: Subscription = user.find_subscription(id)
+    return subscription.update_patch(subscription_update, session)

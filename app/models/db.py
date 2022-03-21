@@ -172,6 +172,12 @@ class SubscriptionBase(SQLModel):
     active: bool = Field(default=True, title="Active")
 
 
+class SubscriptionPatch(SQLModel):
+    plan_id: Optional[int] = Field(None, title="Plan")
+    app_id: Optional[int] = Field(None, title="App")
+    active: Optional[bool] = Field(True, title="Active")
+
+
 class Subscription(SubscriptionBase, CRUD, table=True):
     id: Optional[int] = Field(None, title="ID", primary_key=True)
     user_id: Optional[int] = Field(None, title="User", foreign_key="user.id")

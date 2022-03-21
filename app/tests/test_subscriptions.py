@@ -114,3 +114,32 @@ def test_api_v1_subscriptions_update(session: Session, client: TestClient):
 
     for key, value in new_data.items():
         assert data[key] == value
+
+
+def test_api_v1_subscriptions_partial_update(session: Session, client: TestClient):
+    user = User(username="test_name", hashed_password="pass")
+    user.save(session)
+    Plan.setup(session)
+
+    app = App(
+        name="Crowdbotics",
+        description="No-code app builder",
+        type="Web",
+        framework="Django",
+        user=user,
+    )
+    sub = Subscription(user_id=user.id, app_id=app.id, plan_id=2)
+    sub.save(session)
+
+    new_data = {"active": False}
+    response = client.patch(
+        f"/api/v1/subscriptions/{sub.id}/",
+        json=new_data,
+    )
+    data = response.json()
+
+    assert response.status_code == 200
+
+    assert data["active"] == False
+    assert data["app_id"] == app.id
+    assert data["plan_id"] == 2
