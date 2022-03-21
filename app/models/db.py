@@ -65,6 +65,15 @@ class User(CRUD, table=True):
             raise HTTPException(status_code=404, detail=f"App not found")
         return app[0]
 
+    def find_subscription(self, subscription_id):
+        all_subscriptions = self.subscriptions
+        subscription = list(
+            filter(lambda x: x.id == subscription_id, all_subscriptions)
+        )
+        if not subscription:
+            raise HTTPException(status_code=404, detail=f"Subscription not found")
+        return subscription[0]
+
     @staticmethod
     def find_username(username: str, session: Session):
         statement = select(User).where(User.username == username)

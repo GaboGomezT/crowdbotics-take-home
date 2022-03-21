@@ -39,8 +39,14 @@ def api_v1_subscriptions_create(
 
 
 @router.get("/api/v1/subscriptions/{id}/", response_model=Subscription)
-def api_v1_subscriptions_read(id: int) -> Subscription:
-    pass
+def api_v1_subscriptions_read(
+    *,
+    session: Session = Depends(get_session),
+    token: TokenData = Depends(get_token),
+    id: int
+) -> Subscription:
+    user = User.validate_token(token.username, session)
+    return user.find_subscription(id)
 
 
 @router.put("/api/v1/subscriptions/{id}/", response_model=Subscription)

@@ -57,3 +57,28 @@ def test_api_v1_subscriptions_create(session: Session, client: TestClient):
     assert data["app_id"] == app.id
     assert data["active"] == True
     assert data["user_id"] == user.id
+
+
+def test_api_v1_subscriptions_read(session: Session, client: TestClient):
+    user = User(username="test_name", hashed_password="pass")
+    user.save(session)
+    Plan.setup(session)
+
+    app = App(
+        name="Crowdbotics",
+        description="No-code app builder",
+        type="Web",
+        framework="Django",
+        user=user,
+    )
+    sub = Subscription(user_id=user.id, app_id=app.id, plan_id=2)
+    sub.save(session)
+    response = client.get(f"/api/v1/subscriptions/{app.id}/")
+    data = response.json()
+
+    assert response.status_code == 200
+
+    sub_dict = sub.dict()
+    sub_dict["created_at"] = sub_dict["created_at"].strftime("%Y-%m-%dT%H:%M:%S.%f")
+    sub_dict["updated_at"] = sub_dict["updated_at"].strftime("%Y-%m-%dT%H:%M:%S.%f")
+    assert data == sub_dict
