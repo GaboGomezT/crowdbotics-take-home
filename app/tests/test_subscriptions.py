@@ -73,7 +73,7 @@ def test_api_v1_subscriptions_read(session: Session, client: TestClient):
     )
     sub = Subscription(user_id=user.id, app_id=app.id, plan_id=2)
     sub.save(session)
-    response = client.get(f"/api/v1/subscriptions/{app.id}/")
+    response = client.get(f"/api/v1/subscriptions/{sub.id}/")
     data = response.json()
 
     assert response.status_code == 200
@@ -82,3 +82,35 @@ def test_api_v1_subscriptions_read(session: Session, client: TestClient):
     sub_dict["created_at"] = sub_dict["created_at"].strftime("%Y-%m-%dT%H:%M:%S.%f")
     sub_dict["updated_at"] = sub_dict["updated_at"].strftime("%Y-%m-%dT%H:%M:%S.%f")
     assert data == sub_dict
+
+
+def test_api_v1_subscriptions_update(session: Session, client: TestClient):
+    user = User(username="test_name", hashed_password="pass")
+    user.save(session)
+    Plan.setup(session)
+
+    app = App(
+        name="Crowdbotics",
+        description="No-code app builder",
+        type="Web",
+        framework="Django",
+        user=user,
+    )
+    sub = Subscription(user_id=user.id, app_id=app.id, plan_id=2)
+    sub.save(session)
+
+    new_data = {
+        "active": True,
+        "app_id": app.id,
+        "plan_id": 3,
+    }
+    response = client.put(
+        f"/api/v1/subscriptions/{sub.id}/",
+        json=new_data,
+    )
+    data = response.json()
+
+    assert response.status_code == 200
+
+    for key, value in new_data.items():
+        assert data[key] == value

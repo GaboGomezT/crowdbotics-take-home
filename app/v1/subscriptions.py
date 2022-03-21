@@ -50,8 +50,16 @@ def api_v1_subscriptions_read(
 
 
 @router.put("/api/v1/subscriptions/{id}/", response_model=Subscription)
-def api_v1_subscriptions_update(id: int, body: Subscription = ...) -> Subscription:
-    pass
+def api_v1_subscriptions_update(
+    *,
+    session: Session = Depends(get_session),
+    token: TokenData = Depends(get_token),
+    id: int,
+    subscription_update: SubscriptionBase = ...
+) -> Subscription:
+    user = User.validate_token(token.username, session)
+    subscription: Subscription = user.find_subscription(id)
+    return subscription.update_patch(subscription_update, session)
 
 
 @router.patch("/api/v1/subscriptions/{id}/", response_model=Subscription)

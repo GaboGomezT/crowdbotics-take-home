@@ -179,3 +179,10 @@ class Subscription(SubscriptionBase, CRUD, table=True):
     updated_at: Optional[datetime] = Field(datetime.utcnow(), title="Updated at")
 
     user: Optional[User] = Relationship(back_populates="subscriptions")
+
+    def update_patch(self, subscription: SubscriptionBase, session: Session):
+        sub_data = subscription.dict(exclude_unset=True)
+        for key, value in sub_data.items():
+            setattr(self, key, value)
+        self.updated_at = datetime.now()
+        return self.save(session)
