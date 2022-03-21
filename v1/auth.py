@@ -6,11 +6,7 @@ from sqlmodel import Session
 
 from config import get_session
 from models.db import PasswordChange, Token, TokenData, User
-from v1.auth_utils import (
-    ACCESS_TOKEN_EXPIRE_MINUTES,
-    create_access_token,
-    get_token,
-)
+from v1.auth_utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_token
 
 router = APIRouter()
 

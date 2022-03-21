@@ -9,13 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 
 from config import get_session
-from models.db import (
-    Subscription,
-    SubscriptionBase,
-    SubscriptionPatch,
-    TokenData,
-    User,
-)
+from models.db import Subscription, SubscriptionBase, SubscriptionPatch, TokenData, User
 from v1.auth_utils import get_token
 
 
