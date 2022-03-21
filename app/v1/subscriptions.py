@@ -5,7 +5,7 @@ from fastapi import APIRouter
 router = APIRouter()
 from typing import List, Union
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 
 from app.config import get_session
@@ -39,7 +39,12 @@ def api_v1_subscriptions_create(
     subscription: SubscriptionBase
 ) -> Union[None, Subscription]:
     user = User.validate_token(token.username, session)
+    all_subs = user.subscriptions
     db_subscription = Subscription.from_orm(subscription)
+    if db_subscription.app_id in [sub.app_id for sub in all_subs]:
+        raise HTTPException(
+            status_code=400, detail="Subscription for that project already exists."
+        )
     db_subscription.user = user
     return db_subscription.save(session)
 

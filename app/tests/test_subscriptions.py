@@ -60,6 +60,33 @@ def test_api_v1_subscriptions_create(session: Session, client: TestClient):
     assert data["user_id"] == user.id
 
 
+def test_api_v1_subscriptions_create_fail(session: Session, client: TestClient):
+    user = User(username="test_name", hashed_password="pass")
+    user.save(session)
+    Plan.setup(session)
+    app = App(
+        name="Crowdbotics",
+        description="No-code app builder",
+        type="Web",
+        framework="Django",
+        user=user,
+    )
+    app.save(session)
+    sub = Subscription(user_id=user.id, app_id=app.id, plan_id=2)
+    sub.save(session)
+    response = client.post(
+        "/api/v1/subscriptions/",
+        json={
+            "plan_id": 1,
+            "app_id": app.id,
+            "active": True,
+        },
+    )
+
+    fastapi_app.dependency_overrides.clear()
+    assert response.status_code == 400
+
+
 def test_api_v1_subscriptions_read(session: Session, client: TestClient):
     user = User(username="test_name", hashed_password="pass")
     user.save(session)
