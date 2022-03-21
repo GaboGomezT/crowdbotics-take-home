@@ -6,7 +6,6 @@ from pydantic import constr
 from sqlalchemy import desc
 from sqlmodel import Field, Session
 
-from app.config import get_session
 from app.models.base import CRUD
 
 

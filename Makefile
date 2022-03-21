@@ -1,5 +1,5 @@
 clean:
-	autoflake --in-place --remove-unused-variables --imports=pydantic,fastapi **/**/*.py
+	autoflake --in-place --remove-unused-variables --imports=pydantic,fastapi,app **/**/*.py
 	isort **/**/*.py
 	black **/**/*.py
 
