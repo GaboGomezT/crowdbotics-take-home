@@ -131,11 +131,12 @@ def test_api_v1_apps_partial_update(session: Session, client: TestClient):
         json=new_data,
     )
     data = response.json()
-    print(data)
     assert response.status_code == 200
 
-    for key, value in new_data.items():
-        assert data[key] == value
+    assert data["name"] == "Crowdbotics 2.0"
+    assert data["description"] == "No-code app builder"
+    assert data["type"] == "Web"
+    assert data["framework"] == "Django"
 
 
 def test_api_v1_apps_delete(session: Session, client: TestClient):
