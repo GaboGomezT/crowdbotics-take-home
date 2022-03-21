@@ -7,8 +7,8 @@ load_dotenv(override=True)
 
 SECRET_KEY = getenv("SECRET_KEY")
 DATABASE_URL = getenv("DATABASE_URL")
-DEV = getenv("DEV", default=False)
-engine = create_engine(DATABASE_URL, echo=DEV)
+DEV = getenv("DEV")
+engine = create_engine(DATABASE_URL, echo=True if DEV == "1" else False)
 
 
 def get_session():
