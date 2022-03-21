@@ -136,13 +136,13 @@ class AppBase(SQLModel):
     framework: str = Field(..., title="Framework")
     domain_name: Optional[constr(max_length=50)] = Field(None, title="Domain name")
 
-    @validator('type')
+    @validator("type")
     def valid_type(cls, v):
         if v not in [v.value for v in Type.__members__.values()]:
             raise HTTPException(status_code=400, detail=f"{v} is not a valid choice")
         return v
-    
-    @validator('framework')
+
+    @validator("framework")
     def valid_framework(cls, v):
         if v not in [v.value for v in Framework.__members__.values()]:
             raise HTTPException(status_code=400, detail=f"{v} is not a valid choice")
@@ -152,21 +152,22 @@ class AppBase(SQLModel):
 class AppPatch(SQLModel):
     name: Optional[constr(min_length=1, max_length=50)] = Field(None, title="Name")
     description: Optional[str] = Field(None, title="Description")
-    type: Optional[str] = Field(None, title="Type")
-    framework: Optional[str] = Field(None, title="Framework")
+    type: Optional[str] = Field("Web", title="Type")
+    framework: Optional[str] = Field("Django", title="Framework")
     domain_name: Optional[constr(max_length=50)] = Field(None, title="Domain name")
 
-    @validator('type')
+    @validator("type")
     def valid_type(cls, v):
         if v not in [v.value for v in Type.__members__.values()]:
             raise HTTPException(status_code=400, detail=f"{v} is not a valid choice")
         return v
-    
-    @validator('framework')
+
+    @validator("framework")
     def valid_framework(cls, v):
         if v not in [v.value for v in Framework.__members__.values()]:
             raise HTTPException(status_code=400, detail=f"{v} is not a valid choice")
         return v
+
 
 class App(AppBase, CRUD, table=True):
     id: Optional[int] = Field(None, title="ID", primary_key=True)

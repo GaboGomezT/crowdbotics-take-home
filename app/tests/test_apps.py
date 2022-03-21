@@ -67,7 +67,7 @@ def test_api_v1_apps_list(session: Session, client: TestClient):
         name="Some other app",
         description="No-code app builder",
         type="Web",
-        framework="FastAPI",
+        framework="Django",
         user=user,
     )
     second_app.save(session)
