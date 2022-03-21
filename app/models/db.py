@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from fastapi import HTTPException, status
 from passlib.context import CryptContext
-from pydantic import AnyUrl, constr
+from pydantic import AnyUrl, constr, validator
 from sqlmodel import Field, Relationship, Session, SQLModel, select
 
 from app.models.base import CRUD
@@ -136,6 +136,18 @@ class AppBase(SQLModel):
     framework: str = Field(..., title="Framework")
     domain_name: Optional[constr(max_length=50)] = Field(None, title="Domain name")
 
+    @validator('type')
+    def valid_type(cls, v):
+        if v not in [v.value for v in Type.__members__.values()]:
+            raise HTTPException(status_code=400, detail=f"{v} is not a valid choice")
+        return v
+    
+    @validator('framework')
+    def valid_framework(cls, v):
+        if v not in [v.value for v in Framework.__members__.values()]:
+            raise HTTPException(status_code=400, detail=f"{v} is not a valid choice")
+        return v
+
 
 class AppPatch(SQLModel):
     name: Optional[constr(min_length=1, max_length=50)] = Field(None, title="Name")
@@ -144,6 +156,17 @@ class AppPatch(SQLModel):
     framework: Optional[str] = Field(None, title="Framework")
     domain_name: Optional[constr(max_length=50)] = Field(None, title="Domain name")
 
+    @validator('type')
+    def valid_type(cls, v):
+        if v not in [v.value for v in Type.__members__.values()]:
+            raise HTTPException(status_code=400, detail=f"{v} is not a valid choice")
+        return v
+    
+    @validator('framework')
+    def valid_framework(cls, v):
+        if v not in [v.value for v in Framework.__members__.values()]:
+            raise HTTPException(status_code=400, detail=f"{v} is not a valid choice")
+        return v
 
 class App(AppBase, CRUD, table=True):
     id: Optional[int] = Field(None, title="ID", primary_key=True)
