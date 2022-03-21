@@ -3,10 +3,10 @@ from typing import List
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
-from app.models.db import User
-from app.models.plans import Plan
-from app.tests.fixtures import session_fixture  # noqa: E731
-from app.tests.fixtures import client_fixture, token_fixture  # noqa: E731
+from models.db import User
+from models.plans import Plan
+from tests.fixtures import session_fixture  # noqa: E731
+from tests.fixtures import client_fixture, token_fixture  # noqa: E731
 
 
 def test_api_v1_plans_list(session: Session, client: TestClient):

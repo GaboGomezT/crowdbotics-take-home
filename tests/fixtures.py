@@ -3,10 +3,10 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
-from app.config import get_session
-from app.main import app as fastapi_app
-from app.models.db import TokenData
-from app.v1.auth_utils import get_token
+from config import get_session
+from main import app as fastapi_app
+from models.db import TokenData
+from v1.auth_utils import get_token
 
 
 @pytest.fixture(name="session")

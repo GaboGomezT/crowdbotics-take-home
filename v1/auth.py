@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session
 
-from app.config import get_session
-from app.models.db import PasswordChange, Token, TokenData, User
-from app.v1.auth_utils import (
+from config import get_session
+from models.db import PasswordChange, Token, TokenData, User
+from v1.auth_utils import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
     get_token,

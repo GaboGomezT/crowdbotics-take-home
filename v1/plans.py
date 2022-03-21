@@ -3,13 +3,13 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 
-from app.config import get_session
-from app.models.db import TokenData, User
-from app.v1.auth_utils import get_token
+from config import get_session
+from models.db import TokenData, User
+from v1.auth_utils import get_token
 
 router = APIRouter()
 
-from app.models.plans import Plan
+from models.plans import Plan
 
 
 @router.get("/api/v1/plans/", response_model=List[Plan])

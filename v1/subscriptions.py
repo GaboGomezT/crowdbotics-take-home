@@ -8,15 +8,15 @@ from typing import List, Union
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 
-from app.config import get_session
-from app.models.db import (
+from config import get_session
+from models.db import (
     Subscription,
     SubscriptionBase,
     SubscriptionPatch,
     TokenData,
     User,
 )
-from app.v1.auth_utils import get_token
+from v1.auth_utils import get_token
 
 
 @router.get("/api/v1/subscriptions/", response_model=List[Subscription])

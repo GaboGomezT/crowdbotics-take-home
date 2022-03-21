@@ -6,7 +6,7 @@ from pydantic import constr
 from sqlalchemy import desc
 from sqlmodel import Field, Session
 
-from app.models.base import CRUD
+from models.base import CRUD
 
 
 class Plan(CRUD, table=True):

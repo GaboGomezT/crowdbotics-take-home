@@ -2,9 +2,9 @@ from fastapi import Depends, FastAPI
 from sqlmodel import Session
 from sqlmodel import SQLModel
 
-from app.config import engine, get_session
-from app.models.plans import Plan
-from app.v1 import apps, auth, plans, subscriptions
+from config import engine, get_session
+from models.plans import Plan
+from v1 import apps, auth, plans, subscriptions
 
 
 def create_db_and_tables():

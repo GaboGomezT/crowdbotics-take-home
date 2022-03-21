@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 from pydantic import AnyUrl, constr, validator
 from sqlmodel import Field, Relationship, Session, SQLModel, select
 
-from app.models.base import CRUD
+from models.base import CRUD
 
 ############################## Auth ######################################
 

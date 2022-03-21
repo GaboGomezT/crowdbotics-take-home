@@ -3,9 +3,9 @@ from typing import List, Union
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 
-from app.config import get_session
-from app.models.db import App, AppBase, AppPatch, TokenData, User
-from app.v1.auth_utils import get_token
+from config import get_session
+from models.db import App, AppBase, AppPatch, TokenData, User
+from v1.auth_utils import get_token
 
 router = APIRouter()
 
