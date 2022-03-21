@@ -3,12 +3,22 @@ from typing import List, Union
 from fastapi import APIRouter
 
 router = APIRouter()
-from app.models.subscriptions import Subscription
+from typing import List, Union
+
+from fastapi import APIRouter, Depends
+from sqlmodel import Session
+
+from app.config import get_session
+from app.models.db import Subscription, TokenData, User
+from app.v1.auth_utils import get_token
 
 
 @router.get("/api/v1/subscriptions/", response_model=List[Subscription])
-def api_v1_subscriptions_list() -> List[Subscription]:
-    pass
+def api_v1_subscriptions_list(
+    *, session: Session = Depends(get_session), token: TokenData = Depends(get_token)
+) -> List[Subscription]:
+    user = User.validate_token(token.username, session)
+    return user.subscriptions
 
 
 @router.post(

@@ -25,6 +25,7 @@ class User(CRUD, table=True):
     hashed_password: str = Field(..., title="Hashed password")
 
     apps: List["App"] = Relationship(back_populates="user")
+    subscriptions: List["Subscription"] = Relationship(back_populates="user")
 
     def save_new(self, session: Session):
         db_user = None
@@ -151,3 +152,21 @@ class App(AppBase, CRUD, table=True):
             setattr(self, key, value)
         self.updated_at = datetime.now()
         return self.save(session)
+
+
+############################## Subscriptions ######################################
+
+
+class SubscriptionBase(SQLModel):
+    plan_id: int = Field(..., title="Plan")
+    app_id: int = Field(..., title="App")
+    active: bool = Field(default=True, title="Active")
+
+
+class Subscription(SubscriptionBase, CRUD, table=True):
+    id: Optional[int] = Field(None, title="ID", primary_key=True)
+    user_id: Optional[int] = Field(None, title="User", foreign_key="user.id")
+    created_at: Optional[datetime] = Field(datetime.utcnow(), title="Created at")
+    updated_at: Optional[datetime] = Field(datetime.utcnow(), title="Updated at")
+
+    user: Optional[User] = Relationship(back_populates="subscriptions")
